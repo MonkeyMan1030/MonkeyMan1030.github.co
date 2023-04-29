@@ -24,3 +24,11 @@ hamburger.addEventListener('click', () => {
   hamburger.classList.toggle('active');
   document.querySelector('nav ul').classList.toggle('active');
 });
+// Get the "Learn More" button
+const learnMoreBtn = document.querySelector('.hero .btn');
+
+// Add event listener to the "Learn More" button
+learnMoreBtn.addEventListener('click', () => {
+  // Redirect to the "About" page
+  window.location.href = 'about.html';
+});
