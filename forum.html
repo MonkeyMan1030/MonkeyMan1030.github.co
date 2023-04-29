@@ -49,7 +49,7 @@
         snapshot.forEach(doc => {
           const post = doc.data();
           const li = document.createElement('li');
-          li.textContent = `${post.title}: ${post.content}`;
+          li.textContent = `${post.date} ${post.title}: ${post.content}`;
           postList.appendChild(li);
         });
       });
@@ -63,13 +63,16 @@
 
         addDoc(collection(db, 'posts'), {
           title: title,
-          content: content
+          content: content,
+          date: new Date()
         }).then(() => {
-          console.log('New post added!');
           newPostForm.reset();
         }).catch(error => {
           console.error('Error adding new post:', error);
         });
+        setTimeout(() => {
+          window.reload();
+        }, 1000);
       });
     </script>
   </body>
