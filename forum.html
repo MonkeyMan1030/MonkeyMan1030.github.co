@@ -20,6 +20,53 @@
     <h2>Posts</h2>
     <ul id="post-list"></ul>
 
-    <script src="forum.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js"></script>
+    <script>
+      // Initialize Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyAm9WUVUpsrVpdZTDi41FQLm6IluJDidqY",
+        authDomain: "thevillage-5d1d4.firebaseapp.com",
+        projectId: "thevillage-5d1d4",
+        storageBucket: "thevillage-5d1d4.appspot.com",
+        messagingSenderId: "105316126971",
+        appId: "1:105316126971:web:6828d4cd6e07114656605e"
+      };
+      firebase.initializeApp(firebaseConfig);
+
+      const firestore = firebase.firestore();
+
+      const postList = document.querySelector('#post-list');
+      const newPostForm = document.querySelector('#new-post-form');
+
+      // display all posts
+      firestore.collection('posts').get().then(snapshot => {
+        snapshot.forEach(doc => {
+          const post = doc.data();
+          const li = document.createElement('li');
+          li.textContent = `${post.title}: ${post.content}`;
+          postList.appendChild(li);
+        });
+      });
+
+      // add new post
+      newPostForm.addEventListener('submit', e => {
+        e.preventDefault();
+
+        const title = newPostForm['post-title'].value;
+        const content = newPostForm['post-content'].value;
+
+        firestore.collection('posts').add({
+          title: title,
+          content: content
+        }).then(() => {
+          console.log('New post added!');
+          newPostForm.reset();
+        }).catch(error => {
+          console.error('Error adding new post:', error);
+        });
+      });
+    </script>
   </body>
 </html>
