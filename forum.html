@@ -27,6 +27,7 @@
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+      import { getFirestore, collection, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js';
       // Initialize Firebase
       const firebaseConfig = {
         apiKey: "AIzaSyAm9WUVUpsrVpdZTDi41FQLm6IluJDidqY",
@@ -36,15 +37,15 @@
         messagingSenderId: "105316126971",
         appId: "1:105316126971:web:6828d4cd6e07114656605e"
       };
-      firebase.initializeApp(firebaseConfig);
 
-      const firestore = firebase.firestore();
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
 
       const postList = document.querySelector('#post-list');
       const newPostForm = document.querySelector('#new-post-form');
 
       // display all posts
-      firestore.collection('posts').get().then(snapshot => {
+      getDocs(collection(db, 'posts')).then(snapshot => {
         snapshot.forEach(doc => {
           const post = doc.data();
           const li = document.createElement('li');
@@ -60,7 +61,7 @@
         const title = newPostForm['post-title'].value;
         const content = newPostForm['post-content'].value;
 
-        firestore.collection('posts').add({
+        addDoc(collection(db, 'posts'), {
           title: title,
           content: content
         }).then(() => {
