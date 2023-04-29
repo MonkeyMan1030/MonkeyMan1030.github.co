@@ -27,7 +27,7 @@
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-      import { getFirestore, collection, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js';
+      import { getFirestore, collection, orderBy, query, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js';
       // Initialize Firebase
       const firebaseConfig = {
         apiKey: "AIzaSyAm9WUVUpsrVpdZTDi41FQLm6IluJDidqY",
@@ -40,16 +40,20 @@
 
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
+      const postsRef = collection(db, 'posts');
 
       const postList = document.querySelector('#post-list');
       const newPostForm = document.querySelector('#new-post-form');
 
       // display all posts
-      getDocs(collection(db, 'posts')).then(snapshot => {
+      getDocs(query(postsRef, orderBy('date', 'desc'))).then(snapshot => {
         snapshot.forEach(doc => {
           const post = doc.data();
           const li = document.createElement('li');
-          li.textContent = `${post.date} ${post.title}: ${post.content}`;
+          const date = post.date
+              .toDate()
+              .toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric", hour: "numeric", minute: "numeric"})
+          li.textContent = `At ${date} - ${post.title}: ${post.content}`;
           postList.appendChild(li);
         });
       });
@@ -62,17 +66,17 @@
         const content = newPostForm['post-content'].value;
 
         addDoc(collection(db, 'posts'), {
-          title: title,
-          content: content,
+          title,
+          content,
           date: new Date()
         }).then(() => {
           newPostForm.reset();
+          setTimeout(() => {
+            window.reload();
+          }, 1000);
         }).catch(error => {
           console.error('Error adding new post:', error);
         });
-        setTimeout(() => {
-          window.reload();
-        }, 1000);
       });
     </script>
   </body>
