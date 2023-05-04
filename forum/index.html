@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Forum</title>
+  </head>
+  <body>
+    <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="">Home</a></li>
+                <li><a href="about">About Us</a></li>
+                <li><a href="forum">Forum</a></li>
+                <li><a href="admissions">Admissions</a></li>
+                <li><a href="contact us">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <style>
+      body {
+          font-family: "Comic Sans MS", sans-serif;
+        background: linear-gradient(to bottom, #8B4513, #FFFF00);
+      }
+
+      #post-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      #post-list > * {
+        border: 1px solid black;
+        min-width: 95%;
+        padding: 4px;
+      }
+    </style>
+    <marquee><h1>Welcome to the Forum!</h1></marquee>
+
+    <h2>New Post</h2>
+    <form id="new-post-form">
+      <label for="post-name">Name:</label>
+      <input type="text" id="post-name" name="post-name" required>
+
+      <label for="post-title">Title:</label>
+      <input type="text" id="post-title" name="post-title" required>
+
+      <label for="post-content">Content:</label>
+      <textarea id="post-content" name="post-content" required></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <h2>Posts</h2>
+    <ul id="post-list"></ul>
+
+    <script type="module" src="index.js" defer></script>
+  </body>
+</html>

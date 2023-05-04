@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Forum</title>
+  </head>
+  <body>
+    <body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="">Home</a></li>
+                <li><a href="about">About Us</a></li>
+                <li><a href="forum">Forum</a></li>
+                <li><a href="admissions">Admissions</a></li>
+                <li><a href="contact us">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    <style>
+      body {
+          font-family: "Comic Sans MS", sans-serif;
+        background: linear-gradient(to bottom, #8B4513, #FFFF00);
+      }
+
+      #replies {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      #replies > * {
+        border: 1px solid black;
+        min-width: 95%;
+        padding: 4px;
+      }
+    </style>
+
+    <h1 id="title"></h1>
+    <h5 id="metadata"></h5>
+    <p id="content"></p>
+
+    <br>
+    <br>
+
+    <h2>Replies</h2>
+
+    <ul id="replies"></ul>
+
+    <br>
+    <br>
+
+    <h2>Post a Reply</h2>
+    <form id="new-reply-form">
+        <label for="reply-name">Name:</label>
+        <input type="text" id="reply-name" name="reply-name" required>
+  
+        <label for="reply-content">Content:</label>
+        <textarea id="reply-content" name="reply-content" required></textarea>
+  
+        <button type="submit">Submit</button>
+    </form>
+
+    <script type="module" src="post.js" defer></script>
+  </body>
+</html>
