@@ -1,60 +1,67 @@
-import { db, formatDate } from './common.js';
-import {collection, getDoc, doc, where, orderBy, query, getDocs, addDoc} from 'https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js';
+import { db, formatDate } from './common.js'
 
-const repliesRef = collection(db, 'replies');
+const href = new URL(window.location.href)
+const postId = href.searchParams.get('id')
 
-const href = new URL(window.location.href); 
-const postId = href.searchParams.get('id');
-console.log(postId);
+const { data: post, error: postError } = await db
+    .from('posts')
+    .select()
+    .eq('id', postId)
+    .limit(1)
+    .single()
 
-const postDoc = doc(db, 'posts', postId);
-const post = (await getDoc(postDoc)).data();
+if(postError) {
+    alert("Error fetching post!")
+}
+
+post.date = new Date(post.date)
 
 const repliesList = document.querySelector("#replies")
+const { data: replies, error: repliesError } = await db
+    .from('replies')
+    .select()
+    .eq('post', postId)
+    .order('date', {ascending: true})
 
-getDocs(query(repliesRef, where('post_id', '==', postId), orderBy('date', 'asc'))).then(snapshot => {
-    snapshot.forEach(doc => {
-        const reply = doc.data();
-        const li = document.createElement('li');
-        const div = document.createElement("div");
-        
-        const header = document.createElement("h5");
-        const content = document.createElement("p");
+replies.forEach(reply => {
+    const li = document.createElement('li')
+    const div = document.createElement("div")
+    
+    const header = document.createElement("h5")
+    const content = document.createElement("p")
 
-        header.textContent = `Replied by ${reply.name ?? "Anonymous"} at ${formatDate(reply.date.toDate())}:`;
-        content.textContent = reply.content;
+    header.textContent = `Replied by ${reply.name ?? "Anonymous"} at ${formatDate(new Date(reply.date))}:`
+    content.textContent = reply.content
 
-        div.appendChild(header);
-        div.appendChild(content);
+    div.appendChild(header)
+    div.appendChild(content)
 
-        li.appendChild(div);
-        repliesList.appendChild(li);
-    });
-});
+    li.appendChild(div)
+    repliesList.appendChild(li)
+})
 
-const newReplyForm = document.querySelector('#new-reply-form');
+const newReplyForm = document.querySelector('#new-reply-form')
 
-newReplyForm.addEventListener('submit', e => {
-    e.preventDefault();
+newReplyForm.addEventListener('submit', async e => {
+    e.preventDefault()
 
-    const name = newReplyForm['reply-name'].value;
-    const content = newReplyForm['reply-content'].value;
+    const name = newReplyForm['reply-name'].value
+    const content = newReplyForm['reply-content'].value
 
-    addDoc(repliesRef, {
-        name,
-        content,
-        date: new Date(),
-        post_id: postId
-    }).then(() => {
+    const { error: newReplyError } = await db
+        .from('replies')
+        .insert({name, content, post: postId})
+    
+    if(newReplyError) {
+        alert('Error creating reply!')
+    } else {
         newReplyForm.reset();
         setTimeout(() => {
             window.location.reload();
         }, 1000);
-    }).catch(error => {
-        console.error('Error adding new reply:', error);
-    });
+    }
 });
 
 document.querySelector("#title").textContent = post.title;
-document.querySelector("#metadata").textContent = `Posted by ${post.name ?? "Anonymous"} at ${formatDate(post.date.toDate())}`;
+document.querySelector("#metadata").textContent = `Posted by ${post.name ?? "Anonymous"} at ${formatDate(post.date)}`;
 document.querySelector("#content").textContent = post.content;
