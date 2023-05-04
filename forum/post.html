@@ -33,6 +33,11 @@
         min-width: 95%;
         padding: 4px;
       }
+
+      #reply-content {
+        width: 700px;
+        height: 200px;
+      }
     </style>
 
     <h1 id="title"></h1>
@@ -53,10 +58,11 @@
     <form id="new-reply-form">
         <label for="reply-name">Name:</label>
         <input type="text" id="reply-name" name="reply-name" required>
-  
+        <br>
         <label for="reply-content">Content:</label>
+        <br>
         <textarea id="reply-content" name="reply-content" required></textarea>
-  
+        <br>
         <button type="submit">Submit</button>
     </form>
 
